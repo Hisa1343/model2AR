@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #f5f5f5; font-family: sans-serif; }
+        model-viewer { width: 100vw; height: 100vh; }
+        #error-msg { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; color: #666; display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="error-msg">
+        <h3>モデルが見つかりません</h3>
+        <p>URLを確認してください。</p>
+    </div>
+
+    <model-viewer
+        id="viewer"
+        src="" 
+        ios-src=""
+        ar
+        ar-modes="scene-viewer quick-look webxr"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1">
+        
+        <button slot="ar-button" style="background-color: white; border-radius: 4px; border: none; position: absolute; top: 16px; right: 16px; padding: 10px 20px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.25);">
+            📷 ARで見る
+        </button>
+    </model-viewer>
+
+    <script>
+        // URLの「?model=〇〇」の部分を取得する処理
+        const params = new URLSearchParams(window.location.search);
+        const modelName = params.get('model');
+        const viewer = document.getElementById('viewer');
+        const errorMsg = document.getElementById('error-msg');
+
+        if (modelName) {
+            // Android用 (.glb) と iOS用 (.usdz) のパスを自動設定
+            viewer.src = `${modelName}.glb`;
+            viewer.iosSrc = `${modelName}.usdz`;
+            // ページタイトルも変更
+            document.title = `${modelName} - AR View`;
+        } else {
+            // パラメータがない場合はビューワーを隠してエラー表示
+            viewer.style.display = 'none';
+            errorMsg.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
