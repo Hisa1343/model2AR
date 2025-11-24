@@ -37,24 +37,17 @@
     </model-viewer>
 
     <script>
-        // URLの「?model=〇〇」の部分を取得する処理
-        const params = new URLSearchParams(window.location.search);
-        const modelName = params.get('model');
-        const viewer = document.getElementById('viewer');
-        const errorMsg = document.getElementById('error-msg');
+    // URLから ?model=xxx を取得
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelName = urlParams.get('model');
 
-        if (modelName) {
-            // Android用 (.glb) と iOS用 (.usdz) のパスを自動設定
-            viewer.src = `${modelName}.glb`;
-            viewer.iosSrc = `${modelName}.usdz`;
-            // ページタイトルも変更
-            document.title = `${modelName} - AR View`;
-        } else {
-            // パラメータがない場合はビューワーを隠してエラー表示
-            viewer.style.display = 'none';
-            errorMsg.style.display = 'block';
-        }
-    </script>
+    if(modelName) {
+        const viewer = document.querySelector('model-viewer');
+        // ファイルパスを動的に設定
+        viewer.src = `${modelName}.glb`;
+        viewer.iosSrc = `${modelName}.usdz`;
+    }
+</script>
 
 </body>
 </html>
